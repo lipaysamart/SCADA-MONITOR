@@ -1,16 +1,15 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMServiceScrape
 metadata:
-  name: kubernetes
+  labels:
+  name: kube-dns
 spec:
+  endpoints:
+  - path: /metrics
+    targetPort: 9153
+  namespaceSelector:
+    matchNames:
+    - kube-system
   selector:
     matchLabels:
-      component: apiserver
-  endpoints:
-  - targetPort: "6443"
-    relabelConfigs:
-      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
-        action: keep
-        regex: default;kubernetes;https
-      - target_label: __address__
-        replacement: kubernetes.default.svc:443
+      k8s-app: kube-dns
