@@ -6,7 +6,7 @@ metadata:
 spec:
   discoveryRole: endpoints
   endpoints:
-    scheme: https
+  - scheme: https
     tlsConfig:
       caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
