@@ -1,0 +1,16 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMProbe
+metadata:
+  name: probe-single-ingress
+  namespace: vm-single
+spec:
+  vmProberSpec:
+     # by default scheme http, and path is /probe
+     url: prometheus-blackbox-exporter.vm-single.svc:9115
+  module: http_2xx
+  targets:
+   ingress: 
+      selector:
+       matchLabels:
+        app: victoria-metrics-single
+  interval: 10s 

@@ -1,0 +1,18 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: example-vmrule-incorrect-rule
+  naemspace: vm-single
+  labels:
+      project: devops
+spec:
+  groups:
+    - name: incorrect rule
+      rules:
+        - alert: vmalert bad config
+          expr: bad expression
+          for: 10s
+          labels:
+            severity: major
+          annotations:
+            value: "{{ $badValue | bad function }}"
