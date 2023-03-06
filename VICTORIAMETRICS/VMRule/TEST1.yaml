@@ -1,0 +1,20 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vmrule
+  namespace: vm-single
+  labels:
+      project: devops
+spec:
+  groups:
+    - name: vmalert
+      rules:
+        - alert: vmalert config reload error
+          expr: delta(vmalert_config_last_reload_errors_total[5m]) > 0
+          for: 10s
+          labels:
+            severity: major
+            job:  "{{ $labels.job }}"
+          annotations:
+            value: "{{ $value }}"
+            description: 'error reloading vmalert config, reload count for 5 min {{ $value }}'

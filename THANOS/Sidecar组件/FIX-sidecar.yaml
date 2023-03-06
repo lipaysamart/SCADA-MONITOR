@@ -1,0 +1,21 @@
+......
+volumes:
+- name: object-storage-config
+  secret:
+    secretName: thanos-objectstorage
+......
+args:
+- sidecar
+- --log.level=debug
+- --tsdb.path=/prometheus
+- --prometheus.url=http://localhost:9090
+- --reloader.config-file=/etc/prometheus/prometheus.yaml.tmpl
+- --reloader.config-envsubst-file=/etc/prometheus-shared/prometheus.yaml
+- --reloader.rule-dir=/etc/prometheus/rules/
+- --objstore.config-file=/etc/secret/thanos.yaml
+......
+volumeMounts:
+- name: object-storage-config
+  mountPath: /etc/secret
+  readOnly: false
+......

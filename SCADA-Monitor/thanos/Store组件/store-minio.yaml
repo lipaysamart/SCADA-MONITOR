@@ -1,9 +1,0 @@
-# thanos-storage-minio.yaml
-type: s3
-config:
-  bucket: thanos
-  endpoint: minio.default.svc.cluster.local:9000
-  access_key: minio
-  secret_key: minio123
-  insecure: true
-  signature_version2: false

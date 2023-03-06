@@ -1,8 +1,0 @@
-apiVersion: operator.victoriametrics.com/v1beta1
-kind: VMStaticScrape
-metadata:
-  name: vmstaticscrape-sample
-spec:
-  jobName: coredns
-  targetEndpoints:
-    - targets: ["192.168.189.120:9153","196.168.189.65:9153"]
