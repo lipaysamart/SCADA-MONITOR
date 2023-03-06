@@ -1,0 +1,18 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  labels:
+  name: kube-apiserver
+spec:
+  discoveryRole: endpoints
+  endpoints:
+    scheme: https
+    tlsConfig:
+      caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabelConfigs:
+    - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+      action: keep
+      regex: default;kubernetes;https
+    - target_label: __address__
+      replacement: kubernetes.default.svc:443
