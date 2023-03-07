@@ -14,4 +14,4 @@ helm upgrade --install victoria-metrics-operator vm/victoria-metrics-operator -f
 
 ####依次定义对应CRD####
 
-VMCluster.yaml -> VMAgent.yaml -> VMAlert.yaml
+VMSingle.yaml -> VMAgent.yaml -> VMAlert.yaml
