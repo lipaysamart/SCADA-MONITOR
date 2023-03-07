@@ -1,0 +1,26 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: kubelet
+spec:
+  discoveryRole: endpoints
+  endpoints:
+  - path: /metrics
+    port: "10250"
+  - scheme: https
+    tlsConfig:
+      caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      insecureSkipVerify: true
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabelConfigs:
+    - action: labelmap
+      regex: __meta_kubernetes_endpoints_name(.+)
+    - source_labels: [__address__]
+      regex: '.*:(10250)' # 匹配 10250 或 10255 端口
+      action: keep
+  namespaceSelector:
+    matchNames:
+    - kube-system
+  selector:
+    matchLabels:
+      k8s-app: kubelet
