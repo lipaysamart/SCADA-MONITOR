@@ -1,0 +1,33 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMProbe
+metadata:
+  name: http2xx-probe
+  namespace: vm-single
+spec:
+  jobName: http2xx-item      # 定义任务名称
+  vmProberSpec:
+    url: prometheus-blackbox-exporter.vm-single.svc:9115   #指定blackbox-exporter地址
+  module: http_2xx                 #配置文件中的检测模块
+  targets:                                          #抓取目标配置
+   # ingress <Object>
+   staticConfig:          #如果配置了 ingress，静态配置优先
+      targets:
+      - https://www.aliyun.com
+      - https://www.baidu.com
+      - https://www.huawei.com
+      - https://docs.victoriametrics.com.com
+      - https://www.p8s.io
+      - https://www.google.com
+      - https://www.gitee.com
+      - https://cloud.tencent.com
+      - https://www.163.com
+      - https://www.qq.com
+      - https://www.taobao.com
+      labels:
+        group: "阿里云域名"
+      relabelingConfigs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+  interval: 2s 
