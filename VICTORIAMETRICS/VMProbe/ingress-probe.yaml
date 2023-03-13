@@ -2,15 +2,35 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMProbe
 metadata:
   name: probe-single-ingress
-  namespace: vm-single
 spec:
   vmProberSpec:
-     # by default scheme http, and path is /probe
-     url: prometheus-blackbox-exporter.vm-single.svc:9115
-  module: http_2xx
+    url: prometheus-blackbox-exporter.default.svc:9115
   targets:
-   ingress: 
-      selector:
-       matchLabels:
-        app: victoria-metrics-single
-  interval: 10s 
+    ingress:
+      namespaceSelector:
+        any: true
+      relabelingConfigs:
+      - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_scrape]
+        action: keep # 保留具有 prometheus.io/scrape=true 这个注解的Service
+        regex: "true"
+      - action: replace
+        source_labels: [__address__]
+        separator: ;
+        target_label: __tmp_ingress_address
+        regex: (.*)
+        replacement: $1
+      - action: replace
+        source_labels: [__meta_kubernetes_ingress_scheme, __address__, __meta_kubernetes_ingress_path]
+        separator: ;
+        target_label: __param_target
+        regex: (.+);(.+);(.+)
+        replacement: ${1}://${2}${3}
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_ingress_name]
+        target_label: ingress
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: prometheus-blackbox-exporter.default.svc:9115
+  module: http_2xx
